@@ -8,7 +8,7 @@ class PokemonRepository {
 
     async pokemonType(pokemonName) {
         let types = await axios
-            .get(url + `${pokemonName}`)
+            .get(this.url + `${pokemonName}`)
             .then(res => {
                 return res.data.types.map(x => x.type.name)
             })
@@ -16,6 +16,10 @@ class PokemonRepository {
                 console.error(error);
             });
         return types;
+    }
+
+    async pokemonMoves(pokemonName) {
+        
     }
 }
 

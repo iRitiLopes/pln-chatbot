@@ -8,7 +8,7 @@ export default class PokemonRepository {
 
 
     async pokemonType(pokemonName) {
-        let types = await this.pokedex.getTypeByName(pokemonName);
+        let types = await this.pokedex.getPokemonByName(pokemonName).then(x => x.types).catch(e => console.log(e));
         return types;
     }
 

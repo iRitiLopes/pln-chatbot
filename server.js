@@ -69,16 +69,21 @@ fastify.post("/pokemon", async function (request, reply) {
   let repo = new PokemonRepository();
   
   let intent = request.body.queryResult.intent
-  console.log(intent);
   let pokemonName = request.body.queryResult.parameters.pokemon_name.toLowerCase();
-  let types = await repo.pokemonType(pokemonName)
+  var res = []
+  switch(intent){
+    case 'poke_types':
+      res = await repo.pokemonType(pokemonName)
+      break
+    case 'poke_evolutions':
+      res = await repo.pokemonEvolutions(pokemonName)
+  }
 
-  console.log(types)
   let resp = {
     "fulfillmentMessages": [
       {
         "text": {
-          "text": [types.join(' and ')]
+          "text": [res.join(' and ')]
         }
       }
     ]

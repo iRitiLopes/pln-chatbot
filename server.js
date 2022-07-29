@@ -69,21 +69,20 @@ fastify.post("/pokemon", async function (request, reply) {
   let repo = new PokemonRepository();
 
   let intent = request.body.queryResult.intent.displayName
-  console.log(intent)
   let pokemonName = request.body.queryResult.parameters.pokemon_name.toLowerCase();
-  console.log(pokemonName)
   var res = ''
+
   switch (intent) {
     case 'poke_types':
       res = await repo.pokemonType(pokemonName)
-      res.join(' e ')
+      res = res.join(' e ')
       break
     case 'poke_evolutions':
       res = await repo.pokemonEvolutions(pokemonName)
       if (res.length < 1) {
         res = ["Não possui evoluções 😔"]
       }
-      res.join(' e ')
+      res = res.join(' e ')
   }
 
   let resp = {

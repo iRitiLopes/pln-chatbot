@@ -12,7 +12,33 @@ export default class PokemonRepository {
         return types;
     }
 
-    async pokemonMoves(pokemonName) {
+    async pokemonEvolutions(pokemonName) {
+        let evolutionChain = await this.pokedex.getEvolutionChainById(await this.evoltionChainId(pokemonName))
+        let chain = evolutionChain.chain;
 
+        let evolution = this.getEvolution(chain.evolves_to)
+        return evolution
+    }
+
+    getEvolution(evo){
+        let evos = []
+        for(var pokemon in evo){
+            evos.push(evo[pokemon].species.name)
+            if(evo[pokemon].evolves_to.length > 0){
+                evos.push(...this.getEvolution(evo[pokemon].evolves_to))
+            }
+        }
+        return evos
+    }
+
+
+    async pokemon(pokemonName){
+        return await this.pokedex.getPokemonByName(pokemonName).then( x => x).catch((e) => console.log(e))
+    }
+
+    async evoltionChainId(pokemonName){
+        let pokemonSpecie = await this.pokedex.getPokemonSpeciesByName(pokemonName)
+        let evolutionChainId = pokemonSpecie.evolution_chain['url']
+        return evolutionChainId.split('/').slice(-2)[0]
     }
 }

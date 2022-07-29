@@ -67,7 +67,9 @@ fastify.get("/", function (request, reply) {
 fastify.post("/pokemon", async function (request, reply) {
   // The Handlebars code will be able to access the parameter values and build them into the page
   let repo = new PokemonRepository();
-
+  
+  let intent = request.body.queryResult.intent
+  console.log(intent);
   let pokemonName = request.body.queryResult.parameters.pokemon_name.toLowerCase();
   let types = await repo.pokemonType(pokemonName)
 

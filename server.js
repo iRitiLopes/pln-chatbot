@@ -56,7 +56,7 @@ fastify.get("/", function (request, reply) {
       }
     ]
   }
-  return reply.view('index')
+  return reply.view('src/pages/index')
 });
 
 /**

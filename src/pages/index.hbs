@@ -26,6 +26,7 @@
 
     <!-- Import the webpage's stylesheet -->
     <link rel="stylesheet" href="/style.css" />
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 
     <!-- This is a handlebars IF statement
          Checking for a custom "color" parameter from server.js -->
@@ -41,7 +42,11 @@
   <body>
     <div class="wrapper">
       <div class="content" role="main">
-        <iframe height="430" width="350" src="https://bot.dialogflow.com/9ac32a8e-ddae-4ed8-a09c-48c71e2ba150"></iframe>
+          <df-messenger
+            intent="WELCOME"
+            chat-title="PokemonHelper"
+            agent-id="9ac32a8e-ddae-4ed8-a09c-48c71e2ba150"
+            language-code="pt-br"></df-messenger>
       </div>
     </div>
     <!-- The footer holds our remix button — you can use it for structure or cut it out ✂ -->

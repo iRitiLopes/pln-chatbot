@@ -69,7 +69,7 @@ fastify.post("/", async function (request, reply) {
   let repo = new PokemonRepository();
 
   let pokemonName = request.body.queryResult.parameters.pokemon_name.toLowerCase();
-  let types = repo.pokemonType(pokemonName)
+  let types = await repo.pokemonType(pokemonName)
 
   console.log(types)
   let resp = {

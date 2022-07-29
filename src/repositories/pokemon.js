@@ -6,7 +6,7 @@ class PokemonRepository {
     }
 
 
-    pokemonType(pokemonName) {
+    async pokemonType(pokemonName) {
         let types = await axios
             .get(url + `${pokemonName}`)
             .then(res => {

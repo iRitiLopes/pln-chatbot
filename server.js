@@ -5,6 +5,7 @@
 
 const path = require("path");
 const axios = require('axios')
+const PokemonRepository = require('./src/repositories/pokemon')
 
 // Require the fastify framework and instantiate it
 const fastify = require("fastify")({
@@ -45,16 +46,16 @@ fastify.get("/", function (request, reply) {
   // The Handlebars code will be able to access the parameter values and build them into the page
   console.log(JSON.stringify(request.body))
   let resp = {
-  "fulfillmentMessages": [
-    {
-      "text": {
-        "text": [
-          "fogo"
-        ]
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [
+            "fogo"
+          ]
+        }
       }
-    }
-  ]
-}
+    ]
+  }
   return JSON.stringify(resp);
 });
 
@@ -65,28 +66,21 @@ fastify.get("/", function (request, reply) {
  */
 fastify.post("/", async function (request, reply) {
   // The Handlebars code will be able to access the parameter values and build them into the page
-  let url = `https://pokeapi.co/api/v2/pokemon/${request.body.queryResult.parameters.pokemon_name.toLowerCase()}`;
-  console.log(url)
-  
-  let types = await axios
-  .get(url)
-  .then(res => {
-    return res.data.types.map(x => x.type.name)
-  })
-  .catch(error => {
-    console.error(error);
-  });
-  
+  let repo = new PokemonRepository();
+
+  let pokemonName = request.body.queryResult.parameters.pokemon_name.toLowerCase();
+  let types = repo.pokemonType(pokemonName)
+
   console.log(types)
   let resp = {
-  "fulfillmentMessages": [
-    {
-      "text": {
-        "text": [types.join(' and ')]
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [types.join(' and ')]
+        }
       }
-    }
-  ]
-}
+    ]
+  }
   return JSON.stringify(resp);
 });
 

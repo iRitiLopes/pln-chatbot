@@ -3,39 +3,39 @@
  * Check out the two endpoints this back-end API provides in fastify.get and fastify.post below
  */
 
-const path = require("path");
-const axios = require('axios')
-const PokemonRepository = require('./src/repositories/pokemon')
+import path from "path";
+import axios from 'axios'
+import PokemonRepository from './src/repositories/pokemon.js'
 
 // Require the fastify framework and instantiate it
-const fastify = require("fastify")({
-  // Set this to true for detailed logging:
-  logger: false,
-});
+import Fastify from "fastify"
 
-// ADD FAVORITES ARRAY VARIABLE FROM TODO HERE
+import fastifyStatic from "@fastify/static"
 
+import {fileURLToPath} from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+let fastify = new Fastify()
 // Setup our static files
-fastify.register(require("@fastify/static"), {
+fastify.register(fastifyStatic, {
   root: path.join(__dirname, "public"),
   prefix: "/", // optional: default '/'
 });
 
 // Formbody lets us parse incoming forms
-fastify.register(require("@fastify/formbody"));
+import fastifyFormBody from "@fastify/formbody"
+fastify.register(fastifyFormBody);
 
 // View is a templating manager for fastify
-fastify.register(require("@fastify/view"), {
+import fastifyView from "@fastify/view"
+import handlebars from "handlebars"
+fastify.register(fastifyView, {
   engine: {
-    handlebars: require("handlebars"),
+    handlebars: handlebars,
   },
 });
-
-// Load and parse SEO data
-const seo = require("./src/seo.json");
-if (seo.url === "glitch-default") {
-  seo.url = `https://${process.env.PROJECT_DOMAIN}.glitch.me`;
-}
 
 /**
  * Our home page route

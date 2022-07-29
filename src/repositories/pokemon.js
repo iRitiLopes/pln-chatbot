@@ -1,7 +1,7 @@
-const axios = require('axios')
-const Pokedex = require('pokedex-promise-v2')
+import Pokedex from 'pokedex-promise-v2'
 
-class PokemonRepository {
+
+export default class PokemonRepository {
     constructor() {
         this.pokedex = new Pokedex()
     }
@@ -16,5 +16,3 @@ class PokemonRepository {
 
     }
 }
-
-module.exports = PokemonRepository

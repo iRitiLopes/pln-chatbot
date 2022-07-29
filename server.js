@@ -12,7 +12,7 @@ import Fastify from "fastify"
 
 import fastifyStatic from "@fastify/static"
 
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -67,16 +67,21 @@ fastify.get("/", function (request, reply) {
 fastify.post("/pokemon", async function (request, reply) {
   // The Handlebars code will be able to access the parameter values and build them into the page
   let repo = new PokemonRepository();
-  
-  let intent = request.body.queryResult.intent
+
+  let intent = request.body.queryResult.intent.displayName
+  console.log(intent)
   let pokemonName = request.body.queryResult.parameters.pokemon_name.toLowerCase();
+  console.log(pokemonName)
   var res = []
-  switch(intent){
+  switch (intent) {
     case 'poke_types':
       res = await repo.pokemonType(pokemonName)
       break
     case 'poke_evolutions':
       res = await repo.pokemonEvolutions(pokemonName)
+      if (res.length < 1) {
+        res = ["Não possui evoluções 😔"]
+      }
   }
 
   let resp = {

@@ -8,7 +8,7 @@ export default class PokemonRepository {
 
 
     async pokemonType(pokemonName) {
-        let types = await this.pokedex.getPokemonByName(pokemonName).then(x => x.types).catch(e => console.log(e));
+        let types = await this.pokedex.getPokemonByName(pokemonName).then(x => x.types.map(p => p.type.name)).catch(e => console.log(e));
         return types;
     }
 
@@ -20,11 +20,11 @@ export default class PokemonRepository {
         return evolution
     }
 
-    getEvolution(evo){
+    getEvolution(evo) {
         let evos = []
-        for(var pokemon in evo){
+        for (var pokemon in evo) {
             evos.push(evo[pokemon].species.name)
-            if(evo[pokemon].evolves_to.length > 0){
+            if (evo[pokemon].evolves_to.length > 0) {
                 evos.push(...this.getEvolution(evo[pokemon].evolves_to))
             }
         }
@@ -32,11 +32,11 @@ export default class PokemonRepository {
     }
 
 
-    async pokemon(pokemonName){
-        return await this.pokedex.getPokemonByName(pokemonName).then( x => x).catch((e) => console.log(e))
+    async pokemon(pokemonName) {
+        return await this.pokedex.getPokemonByName(pokemonName).then(x => x).catch((e) => console.log(e))
     }
 
-    async evoltionChainId(pokemonName){
+    async evoltionChainId(pokemonName) {
         let pokemonSpecie = await this.pokedex.getPokemonSpeciesByName(pokemonName)
         let evolutionChainId = pokemonSpecie.evolution_chain['url']
         return evolutionChainId.split('/').slice(-2)[0]

@@ -1,5 +1,5 @@
 import Pokedex from 'pokedex-promise-v2'
-
+import TypeTranslate from '../services/translate/types.js'
 
 export default class PokemonRepository {
     constructor() {
@@ -9,7 +9,7 @@ export default class PokemonRepository {
 
     async pokemonType(pokemonName) {
         let types = await this.pokedex.getPokemonByName(pokemonName).then(x => x.types.map(p => p.type.name)).catch(e => console.log(e));
-        return types;
+        return types.map(t => TypeTranslate.translate(t));
     }
 
     async pokemonEvolutions(pokemonName) {
@@ -40,5 +40,10 @@ export default class PokemonRepository {
         let pokemonSpecie = await this.pokedex.getPokemonSpeciesByName(pokemonName)
         let evolutionChainId = pokemonSpecie.evolution_chain['url']
         return evolutionChainId.split('/').slice(-2)[0]
+    }
+
+    async moves(pokemonName){
+        let pokemon = await this.pokemon(pokemonName);
+        return pokemon.moves.map(m => m['move']['name'])
     }
 }

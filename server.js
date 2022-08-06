@@ -85,14 +85,13 @@ fastify.post("/pokemon", async function (request, reply) {
       res = res.join(' e ')
     case 'poke_atks':
       res = await repo.moves(pokemonName)
-      res = res.map(m => ` - ${m}\n`)
   }
 
   let resp = {
     "fulfillmentMessages": [
       {
         "text": {
-          "text": [res]
+          "text": Array.isArray(res) ? res :[res]
         }
       }
     ]

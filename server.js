@@ -83,8 +83,10 @@ fastify.post("/pokemon", async function (request, reply) {
         res = ["Não possui evoluções 😔"]
       }
       res = res.join(' e ')
+      break
     case 'poke_atks':
       res = await repo.moves(pokemonName)
+      break
   }
 
   let resp = {

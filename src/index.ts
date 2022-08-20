@@ -2,7 +2,6 @@ import fastify from 'fastify';
 import { dialogFlowWebhookHandler } from './dialogflow/webhook-handler';
 import { createReadStream } from 'fs';
 import { runTests } from './pokemon/pokemon-repository';
-import axios from 'axios';
 
 // runTests().then((_) => {
 //   process.exit(0);
@@ -17,9 +16,6 @@ server.get('/', (request, reply) => {
 });
 
 server.post('/chatbot-dialogflow-webhook', dialogFlowWebhookHandler);
-server.get('/python',  (request, reply) => {
-  axios.get('localhost:5000/').then(x => x.data).catch( x => console.log("erro"));
-});
 
 server.listen({ host: '0.0.0.0', port: process.env.PORT }, (err, address) => {
   if (err) {

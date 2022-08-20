@@ -17,7 +17,7 @@ server.get('/', (request, reply) => {
 });
 
 server.post('/chatbot-dialogflow-webhook', dialogFlowWebhookHandler);
-server.get('/python',  (request, reply) => {
+server.get('/xd',  (request, reply) => {
   axios.get('https://attractive-jealous-existence.glitch.me/').then(x => x.data).catch( x => console.log("erros"));
 });
 

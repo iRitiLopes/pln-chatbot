@@ -26,6 +26,8 @@ import { toProperCase } from '../utils/utils';
 
 import axios from 'axios';
 
+const NOTEBOOK_URL = 'http://df68-34-125-132-146.ngrok.io/'
+
 export const dialogFlowWebhookHandler = async (
   request: FastifyRequest,
   reply: FastifyReply
@@ -88,7 +90,7 @@ export const dialogFlowWebhookHandler = async (
       break;
     case 'tweet':
       let link = (dfWhReq.queryResult.parameters as Tweet).url
-      let res = await axios.post("http://df68-34-125-132-146.ngrok.io/", { url: link }).then(x => x.data).catch(x => console.log(x));
+      let res = await axios.post(NOTEBOOK_URL, { url: link }).then(x => x.data).catch(x => console.log(x));
       pokemonName = await getPokemonById(res['pokemon_id'])
       await getPokemonImageUrl(pokemonName).then(
         (imageUrl) => (response = buildImageResponse(imageUrl, pokemonName))

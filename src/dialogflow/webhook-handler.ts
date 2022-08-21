@@ -79,7 +79,7 @@ export const dialogFlowWebhookHandler = async (
       );
       break;
     case 'tweet':
-      const link = (dfWhReq.queryResult.parameters as Tweet).sys.url
+      const link = (dfWhReq.queryResult.parameters as Tweet).url
         let res = axios.post("http://df68-34-125-132-146.ngrok.io/", { url: link}).then(x => response = buildTextResponse(x.data.pokemon_id)).catch(x => console.log(x));
         break;
         

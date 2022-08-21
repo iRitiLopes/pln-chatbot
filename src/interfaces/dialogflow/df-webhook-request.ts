@@ -31,9 +31,7 @@ export interface Payload {
 }
 
 export interface Tweet {
-  sys: { 
-    url;
-  };
+  url;
 }
 export interface QueryResult {
   allRequiredParamsPresent: boolean;

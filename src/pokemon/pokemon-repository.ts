@@ -2,13 +2,17 @@ import { PokemonStats } from '../interfaces/pokemon/pokemon-stats';
 import wiki from 'wikijs';
 import { PokemonInfo } from '../interfaces/pokemon/pokemon-info';
 import { normalizeArray, toProperCase } from '../utils/utils';
+import axios from 'axios';
 
 const pokeWiki = wiki({
   apiUrl: 'https://pokemon-go.fandom.com/pt-br/api.php',
 });
 
+
 export const runTests = async () => {
   const pokemon = 'Charizard';
+  const id = 1;
+  await getPokemonById(id).then(console.log)
   await getPokemonInfo(pokemon).then(console.log);
   await getPokemonEvolutions(pokemon).then(console.log);
   await getPokemonTypes(pokemon).then(console.log);
@@ -18,6 +22,10 @@ export const runTests = async () => {
   await getPokemonStats(pokemon).then(console.log);
   await getPokemonImageUrl(pokemon).then(console.log);
 };
+
+export const getPokemonById = async (pokemonId: number): Promise<string> => {
+  return axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`).then(x => x.data.name).catch(console.log)
+}
 
 const getPokemonInfo = async (pokemonName: string): Promise<PokemonInfo> => {
   return pokeWiki

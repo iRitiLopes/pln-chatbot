@@ -9,7 +9,7 @@ import {
   getPokemonStats,
 } from '../pokemon/pokemon-repository';
 import { DfIntent } from '../interfaces/dialogflow/df-intent';
-import { DfWebhookRequest } from '../interfaces/dialogflow/df-webhook-request';
+import { DfWebhookRequest, Payload, Tweet } from '../interfaces/dialogflow/df-webhook-request';
 import { DfWebhookTextResponse } from '../interfaces/dialogflow/df-webhook-text-response copy';
 import { DfWebhookImageResponse } from '../interfaces/dialogflow/df-webhook-image-response';
 import {
@@ -23,13 +23,15 @@ import {
 } from '../quotes/quotes';
 import { toProperCase } from '../utils/utils';
 
+import axios from 'axios';
+
 export const dialogFlowWebhookHandler = async (
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
   const dfWhReq = request.body as DfWebhookRequest;
   const intent = { name: dfWhReq.queryResult.intent.displayName } as DfIntent;
-  const pokemonName = toProperCase(dfWhReq.queryResult.parameters.pokemonName);
+  const pokemonName = toProperCase((dfWhReq.queryResult.parameters as Payload).pokemonName);
   let response: DfWebhookImageResponse | DfWebhookTextResponse =
     buildTextResponse(quoteDefaultFallback());
   switch (intent.name) {
@@ -76,6 +78,12 @@ export const dialogFlowWebhookHandler = async (
         (imageUrl) => (response = buildImageResponse(imageUrl, pokemonName))
       );
       break;
+    case 'tweet':
+      const link = (dfWhReq.queryResult.parameters as Tweet).sys.url
+        let res = axios.post("http://df68-34-125-132-146.ngrok.io/", { url: link}).then(x => x.data.pokemon_id).catch(x => console.log(x));
+        break;
+        
+      
   }
   reply.send(response);
 };

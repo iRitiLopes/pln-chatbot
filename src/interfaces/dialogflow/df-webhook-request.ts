@@ -22,7 +22,7 @@ export interface QueryTextSentiment {
 }
 
 export interface OriginalDetectIntentRequest {
-  payload: Payload;
+  payload: Payload | Tweet;
   source: string;
 }
 
@@ -30,6 +30,11 @@ export interface Payload {
   pokemonName;
 }
 
+export interface Tweet {
+  sys: { 
+    url;
+  };
+}
 export interface QueryResult {
   allRequiredParamsPresent: boolean;
   fulfillmentMessages: FulfillmentMessage[];
@@ -37,7 +42,7 @@ export interface QueryResult {
   intentDetectionConfidence: number;
   languageCode: string;
   outputContexts: OutputContext[];
-  parameters: Payload;
+  parameters: Payload | Tweet;
   queryText: string;
   sentimentAnalysisResult: SentimentAnalysisResult;
 }

@@ -17,9 +17,6 @@ server.get('/', (request, reply) => {
 });
 
 server.post('/chatbot-dialogflow-webhook', dialogFlowWebhookHandler);
-server.get('/xd',  (request, reply) => {
-  axios.get('localhost:5000/').then(x => x.data).catch( x => console.log("erro"));
-});
 
 server.listen({ host: '0.0.0.0', port: Number(process.env.PORT) }, (err, address) => {
   if (err) {

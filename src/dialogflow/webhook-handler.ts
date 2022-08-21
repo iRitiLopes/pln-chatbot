@@ -94,7 +94,8 @@ export const dialogFlowWebhookHandler = async (
         (imageUrl) => (response = buildImageResponse(imageUrl, pokemonName))
       );
       break;
-
+        
+      
   }
   reply.send(response);
 };

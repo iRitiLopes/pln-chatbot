@@ -1,3 +1,3 @@
 export interface DfIntent {
-  name: 'evolutions' | 'types' | 'height' | 'weight' | 'weakness' | 'stats' | 'image';
+  name: 'evolutions' | 'types' | 'height' | 'weight' | 'weakness' | 'stats' | 'image' | 'tweet';
 }

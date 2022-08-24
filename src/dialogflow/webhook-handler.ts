@@ -1,18 +1,21 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import {
-  getPokemonEvolutions,
-  getPokemonTypes,
-  getPokemonImageUrl,
-  getPokemonHeight,
-  getPokemonWeight,
-  getPokemonWeakness,
-  getPokemonStats,
-  getPokemonById,
-} from '../pokemon/pokemon-repository';
-import { DfIntent } from '../interfaces/dialogflow/df-intent';
-import { DfWebhookRequest, Payload, Tweet } from '../interfaces/dialogflow/df-webhook-request';
-import { DfWebhookTextResponse } from '../interfaces/dialogflow/df-webhook-text-response copy';
 import { DfWebhookImageResponse } from '../interfaces/dialogflow/df-webhook-image-response';
+import {
+  DfWebhookRequest,
+  Payload
+} from '../interfaces/dialogflow/df-webhook-request';
+import { DfWebhookTextResponse } from '../interfaces/dialogflow/df-webhook-text-response copy';
+import {
+  getPokemonById,
+  getPokemonEvolutions,
+  getPokemonHeight,
+  getPokemonIdByTweet,
+  getPokemonImageUrl,
+  getPokemonStats,
+  getPokemonTypes,
+  getPokemonWeakness,
+  getPokemonWeight
+} from '../pokemon/pokemon-repository';
 import {
   quoteDefaultFallback,
   quoteEvolutions,
@@ -20,26 +23,28 @@ import {
   quoteStats,
   quoteTypes,
   quoteWeakness,
-  quoteWeight,
+  quoteWeight
 } from '../quotes/quotes';
+import { DfIntent } from '../types/dialogflow/df-intent';
 import { toProperCase } from '../utils/utils';
 
-import axios from 'axios';
+import { Tweet } from '../interfaces/app/tweet';
 
-const NOTEBOOK_URL = 'http://df68-34-125-132-146.ngrok.io/'
 
 export const dialogFlowWebhookHandler = async (
   request: FastifyRequest,
   reply: FastifyReply
-) => {
+): Promise<void> => {
   const dfWhReq = request.body as DfWebhookRequest;
-  let pokemonName = ""
-  const intent = { name: dfWhReq.queryResult.intent.displayName } as DfIntent;
+  let pokemonName = '';
+  const intent = dfWhReq.queryResult.intent.displayName as DfIntent;
   let response: DfWebhookImageResponse | DfWebhookTextResponse =
     buildTextResponse(quoteDefaultFallback());
-  switch (intent.name) {
+  switch (intent) {
     case 'evolutions':
-      pokemonName = toProperCase((dfWhReq.queryResult.parameters as Payload).pokemonName);
+      pokemonName = toProperCase(
+        (dfWhReq.queryResult.parameters as Payload).pokemonName
+      );
       await getPokemonEvolutions(pokemonName).then(
         (evolutions) =>
         (response = buildTextResponse(
@@ -48,58 +53,74 @@ export const dialogFlowWebhookHandler = async (
       );
       break;
     case 'types':
-      pokemonName = toProperCase((dfWhReq.queryResult.parameters as Payload).pokemonName);
+      pokemonName = toProperCase(
+        (dfWhReq.queryResult.parameters as Payload).pokemonName
+      );
       await getPokemonTypes(pokemonName).then(
         (types) =>
           (response = buildTextResponse(quoteTypes(pokemonName, types)))
       );
       break;
     case 'height':
-      pokemonName = toProperCase((dfWhReq.queryResult.parameters as Payload).pokemonName);
+      pokemonName = toProperCase(
+        (dfWhReq.queryResult.parameters as Payload).pokemonName
+      );
       await getPokemonHeight(pokemonName).then(
         (height) =>
           (response = buildTextResponse(quoteHeight(pokemonName, height)))
       );
       break;
     case 'weight':
-      pokemonName = toProperCase((dfWhReq.queryResult.parameters as Payload).pokemonName);
+      pokemonName = toProperCase(
+        (dfWhReq.queryResult.parameters as Payload).pokemonName
+      );
       await getPokemonWeight(pokemonName).then(
         (height) =>
           (response = buildTextResponse(quoteWeight(pokemonName, height)))
       );
       break;
     case 'weakness':
-      pokemonName = toProperCase((dfWhReq.queryResult.parameters as Payload).pokemonName);
+      pokemonName = toProperCase(
+        (dfWhReq.queryResult.parameters as Payload).pokemonName
+      );
       await getPokemonWeakness(pokemonName).then(
         (weakness) =>
           (response = buildTextResponse(quoteWeakness(pokemonName, weakness)))
       );
       break;
     case 'stats':
-      pokemonName = toProperCase((dfWhReq.queryResult.parameters as Payload).pokemonName);
+      pokemonName = toProperCase(
+        (dfWhReq.queryResult.parameters as Payload).pokemonName
+      );
       await getPokemonStats(pokemonName).then(
         (stats) =>
           (response = buildTextResponse(quoteStats(pokemonName, stats)))
       );
       break;
     case 'image':
-      pokemonName = toProperCase((dfWhReq.queryResult.parameters as Payload).pokemonName);
+      pokemonName = toProperCase(
+        (dfWhReq.queryResult.parameters as Payload).pokemonName
+      );
       await getPokemonImageUrl(pokemonName).then(
         (imageUrl) => (response = buildImageResponse(imageUrl, pokemonName))
       );
       break;
-    case 'tweet':
-      let link = (dfWhReq.queryResult.parameters as Tweet).url
-      let res = await axios.post(NOTEBOOK_URL, { url: link }).then(x => x.data).catch(x => console.log(x));
-      pokemonName = await getPokemonById(res['pokemon_id'])
+    case 'tweet': {
+      const tweet: Tweet = (dfWhReq.queryResult.parameters as Tweet);
+      const pokeId = await getPokemonIdByTweet(tweet)
+      pokemonName = await getPokemonById(pokeId);
       await getPokemonImageUrl(pokemonName).then(
         (imageUrl) => (response = buildImageResponse(imageUrl, pokemonName))
       );
       break;
-        
-      
+    }
   }
-  reply.send(response);
+  try {
+    await reply.send(response);
+  } catch (e) {
+    console.log(e);
+  }
+
 };
 
 const buildTextResponse = (text: string): DfWebhookTextResponse => {

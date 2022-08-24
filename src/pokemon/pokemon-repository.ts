@@ -1,18 +1,20 @@
-import { PokemonStats } from '../interfaces/pokemon/pokemon-stats';
+import axios from 'axios';
+import { Tweet } from '../interfaces/app/tweet';
 import wiki from 'wikijs';
 import { PokemonInfo } from '../interfaces/pokemon/pokemon-info';
+import { PokemonStats } from '../interfaces/pokemon/pokemon-stats';
 import { normalizeArray, toProperCase } from '../utils/utils';
-import axios from 'axios';
 
 const pokeWiki = wiki({
   apiUrl: 'https://pokemon-go.fandom.com/pt-br/api.php',
 });
 
+const NOTEBOOK_URL = 'http://2747-35-230-113-177.ngrok.io/';
 
-export const runTests = async () => {
+export const runTests = async (): Promise<void> => {
   const pokemon = 'Charizard';
   const id = 1;
-  await getPokemonById(id).then(console.log)
+  await getPokemonById(id).then(console.log);
   await getPokemonInfo(pokemon).then(console.log);
   await getPokemonEvolutions(pokemon).then(console.log);
   await getPokemonTypes(pokemon).then(console.log);
@@ -24,20 +26,23 @@ export const runTests = async () => {
 };
 
 export const getPokemonById = async (pokemonId: number): Promise<string> => {
-  return axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`).then(x => x.data.name).catch(console.log)
-}
+  return await axios
+    .get(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
+    .then((x) => x.data.name)
+    .catch(console.log);
+};
 
 const getPokemonInfo = async (pokemonName: string): Promise<PokemonInfo> => {
-  return pokeWiki
+  return await (pokeWiki
     .page(pokemonName)
-    .then((page) => page.info()) as Promise<PokemonInfo>;
+    .then(async (page) => await page.info()) as Promise<PokemonInfo>);
 };
 
 export const getPokemonEvolutions = async (
   pokemonName: string
 ): Promise<string[]> => {
   const pokeInfo = await getPokemonInfo(pokemonName);
-  let evolutions = normalizeArray([
+  const evolutions = normalizeArray([
     pokeInfo.stage1,
     pokeInfo.stage2,
     pokeInfo.stage3,
@@ -52,7 +57,7 @@ export const getPokemonTypes = async (
   pokemonName: string
 ): Promise<string[]> => {
   const pokeInfo = await getPokemonInfo(pokemonName);
-  let types = normalizeArray([pokeInfo.type1, pokeInfo.type2]);
+  const types = normalizeArray([pokeInfo.type1, pokeInfo.type2]);
   return types.map((type) => toProperCase(type));
 };
 
@@ -81,26 +86,35 @@ export const getPokemonStats = async (
   pokemonName: string
 ): Promise<PokemonStats> => {
   const pokeInfo = await getPokemonInfo(pokemonName);
+  const pokeStats: PokemonStats = {
+    attack: (pokeInfo.attack != null) ? parseInt(pokeInfo.attack) : 0,
+    captureRate: (pokeInfo.capture != null) ? parseInt(pokeInfo.capture) : 0,
+    cpRange: (pokeInfo.cp != null) ? parseInt(pokeInfo.cp) : 0,
+    defense: (pokeInfo.defense != null) ? parseInt(pokeInfo.defense) : 0,
+    fleeRate: (pokeInfo.flee != null) ? parseInt(pokeInfo.flee) : 0,
+    needEvolve: (pokeInfo.needevolve != null) ? parseInt(pokeInfo.needevolve) : 0,
+    stamina: (pokeInfo.stamina != null) ? parseInt(pokeInfo.stamina) : 0,
+  };
 
-  return {
-    attack: pokeInfo.attack && parseInt(pokeInfo.attack),
-    captureRate: pokeInfo.capture && parseInt(pokeInfo.capture),
-    cpRange: pokeInfo.cp && parseInt(pokeInfo.cp),
-    defense: pokeInfo.defense && parseInt(pokeInfo.defense),
-    fleeRate: pokeInfo.flee && parseInt(pokeInfo.flee),
-    needEvolve: pokeInfo.needevolve && parseInt(pokeInfo.needevolve),
-    stamina: pokeInfo.stamina && parseInt(pokeInfo.stamina),
-  } as PokemonStats;
+  return pokeStats;
 };
 
 export const getPokemonImageUrl = async (
   pokemonName: string
 ): Promise<string> => {
-  return pokeWiki
+  return await pokeWiki
     .page(pokemonName)
-    .then((page) =>
-      page
+    .then(async (page) =>
+      await page
         .mainImage()
         .then((imageUrl) => imageUrl.replace(/(.png).*/, '') + '.png')
     );
 };
+
+export const getPokemonIdByTweet = async (tweet: Tweet): Promise<number> => {
+  let id = 0;
+  await axios
+    .post(NOTEBOOK_URL, { url: tweet.url })
+    .then(res => { id = res.data.pokemon_id })
+  return id;
+}

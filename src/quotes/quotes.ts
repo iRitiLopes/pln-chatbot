@@ -15,21 +15,23 @@ export const quoteEvolutions = (
 ) => {
   if (!pokemonEvolutions) return quoteDefaultFallback();
   const evolutionCount = pokemonEvolutions.length;
-  if (evolutionCount > 1)
+  if (evolutionCount > 1) {
     return `As evoluções do ${pokemonName} são ${pokemonEvolutions
       .splice(0, evolutionCount - 1)
       .join(', ')} e ${pokemonEvolutions[evolutionCount - 2]}.`;
-  else return `O ${pokemonName} não possui evoluções.`;
+  }
+  return `O ${pokemonName} não possui evoluções.`;
 };
 
 export const quoteTypes = (pokemonName: string, pokemonTypes: string[]) => {
   if (!pokemonTypes) return quoteDefaultFallback();
   const typeCount = pokemonTypes.length;
-  if (typeCount > 1)
+  if (typeCount > 1) {
     return `Os tipos do ${pokemonName} são ${pokemonTypes
       .splice(0, typeCount - 1)
       .join(', ')} e ${pokemonTypes[typeCount - 2]}.`;
-  else return `O ${pokemonName} não possui tipos.`;
+  }
+  return `O ${pokemonName} não possui tipos.`;
 };
 
 export const quoteHeight = (

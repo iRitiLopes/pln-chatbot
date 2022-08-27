@@ -1,11 +1,11 @@
 {
   "name": "pln-chatbot-pokemon",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node ./src/index.ts"
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",

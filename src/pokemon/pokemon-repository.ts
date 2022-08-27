@@ -9,7 +9,7 @@ const pokeWiki = wiki({
   apiUrl: 'https://pokemon-go.fandom.com/pt-br/api.php',
 });
 
-const NOTEBOOK_URL = 'http://2747-35-230-113-177.ngrok.io/';
+const NOTEBOOK_URL = process.env.URL != null ? process.env.URL : "http://c7bf-35-194-67-149.ngrok.io/";
 
 export const runTests = async (): Promise<void> => {
   const pokemon = 'Charizard';

@@ -1,3 +1,3 @@
 export interface Tweet {
-    url: string;
+  url: string;
 }

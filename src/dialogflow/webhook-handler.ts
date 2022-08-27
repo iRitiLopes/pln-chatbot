@@ -30,7 +30,6 @@ import { toProperCase } from '../utils/utils';
 
 import { Tweet } from '../interfaces/app/tweet';
 
-
 export const dialogFlowWebhookHandler = async (
   request: FastifyRequest,
   reply: FastifyReply
@@ -107,7 +106,7 @@ export const dialogFlowWebhookHandler = async (
       break;
     case 'tweet': {
       const tweet: Tweet = (dfWhReq.queryResult.parameters as Tweet);
-      const pokeId = await getPokemonIdByTweet(tweet)
+      const pokeId = await getPokemonIdByTweet(tweet);
       pokemonName = await getPokemonById(pokeId);
       await getPokemonImageUrl(pokemonName).then(
         (imageUrl) => (response = buildImageResponse(imageUrl, pokemonName))

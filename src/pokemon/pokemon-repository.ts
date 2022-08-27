@@ -9,7 +9,7 @@ const pokeWiki = wiki({
   apiUrl: 'https://pokemon-go.fandom.com/pt-br/api.php',
 });
 
-const NOTEBOOK_URL = process.env.URL != null ? process.env.URL : "http://c7bf-35-194-67-149.ngrok.io/";
+const NOTEBOOK_URL = process.env.URL != null ? process.env.URL : 'http://c7bf-35-194-67-149.ngrok.io/';
 
 export const runTests = async (): Promise<void> => {
   const pokemon = 'Charizard';
@@ -115,6 +115,6 @@ export const getPokemonIdByTweet = async (tweet: Tweet): Promise<number> => {
   let id = 0;
   await axios
     .post(NOTEBOOK_URL, { url: tweet.url })
-    .then(res => { id = res.data.pokemon_id })
+    .then(res => { id = res.data.pokemon_id; });
   return id;
-}
+};

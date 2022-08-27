@@ -1,4 +1,4 @@
-import { Tweet } from "../app/tweet";
+import { Tweet } from '../app/tweet';
 
 export interface DfWebhookRequest {
   alternativeQueryResults: AlternativeQueryResult[];
@@ -31,7 +31,6 @@ export interface OriginalDetectIntentRequest {
 export interface Payload {
   pokemonName;
 }
-
 
 export interface QueryResult {
   allRequiredParamsPresent: boolean;

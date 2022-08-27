@@ -1,3 +1,5 @@
+import { Tweet } from "../app/tweet";
+
 export interface DfWebhookRequest {
   alternativeQueryResults: AlternativeQueryResult[];
   originalDetectIntentRequest: OriginalDetectIntentRequest;
@@ -22,7 +24,7 @@ export interface QueryTextSentiment {
 }
 
 export interface OriginalDetectIntentRequest {
-  payload: Payload | Tweet;
+  payload: Payload;
   source: string;
 }
 
@@ -30,9 +32,7 @@ export interface Payload {
   pokemonName;
 }
 
-export interface Tweet {
-  url;
-}
+
 export interface QueryResult {
   allRequiredParamsPresent: boolean;
   fulfillmentMessages: FulfillmentMessage[];
